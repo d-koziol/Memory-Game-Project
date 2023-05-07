@@ -1,7 +1,7 @@
 const cardArray = [
   {
     name: "fries",
-    img: "images.fries.png",
+    img: "images/fries.png",
   },
   {
     name: "cheeseburger",
@@ -25,7 +25,7 @@ const cardArray = [
   },
   {
     name: "fries",
-    img: "images.fries.png",
+    img: "images/fries.png",
   },
   {
     name: "cheeseburger",
@@ -51,6 +51,9 @@ const cardArray = [
 cardArray.sort(() => 0.5 - Math.random());
 
 const gridDisplay = document.querySelector("#grid");
+let cardsChosen = [];
+let cardsChosenIds = [];
+const cardssWon = [];
 
 function createBoard() {
   for (let i = 0; i < cardArray.length; i += 1) {
@@ -63,9 +66,31 @@ function createBoard() {
 }
 createBoard();
 
+function checkMatch() {
+  const cards = document.querySelectorAll("#grid img");
+
+  console.log("check for match");
+  if (cardsChosen[0] === cardsChosen[1]) {
+    alert("You found a match!");
+    cards[cardsChosenIds[0]].setAttribute("src", "images/white.png");
+    cards[cardsChosenIds[1]].setAttribute("src", "images/white.png");
+    cards[cardsChosenIds[0]].removeEventistener("click", flipCard);
+    cards[cardsChosenIds[1]].removeEventistener("click", flipCard);
+    cardssWon.push(cardsChosen);
+  }
+  cardsChosen = [];
+  cardsChosenIds = [];
+}
+
 function flipCard() {
   console.log(cardArray);
   const cardId = this.getAttribute("data-id");
-  console.log(cardArray[cardId].name);
+  cardsChosen.push(cardArray[cardId].name);
+  cardsChosenIds.push(cardId);
   console.log("click", cardId);
+  console.log(cardsChosen);
+  this.setAttribute("src", cardArray[cardId].img);
+  if (cardsChosen.length === 2) {
+    setTimeout(checkMatch, 500);
+  }
 }
